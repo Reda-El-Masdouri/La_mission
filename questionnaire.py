@@ -1,33 +1,12 @@
-# PROJET QUESTIONNAIRE V3 : POO
-#
-# - Pratiquer sur la POO
-# - Travailler sur du code existant
-# - Mener un raisonnement
-#
-# -> Définir les entitées (données, actions)
-#
-# Question
-#    - titre       - str
-#    - choix       - (str)
-#    - bonne_reponse   - str
-#
-#    - poser()  -> bool
-#
-# Questionnaire
-#    - questions      - (Question)
-#
-#    - lancer()
+
 #
 
 import json
-from operator import le
-from turtle import st
+
 
 import unicodedata
 
-from numpy import diff
 
-X =0
 class Quizz:
     def __init__(self, categorie, titre, difficulte):
         self.titre = titre
@@ -35,10 +14,10 @@ class Quizz:
         self.difficulte = difficulte
         
 
-    def FromData(data):
+    #def FromData(data):
         # ....
-        q = Quizz(data[2], data[0], data[1])
-        return q
+    #    q = Quizz(data[2], data[0], data[1])
+    #    return q
 
     def strip_accents(self, s):
         return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
@@ -51,10 +30,15 @@ class Quizz:
     def lancer(self):
         score = 0
         f = open(self.get_quizz_filename(self.categorie, self.titre, self.difficulte), 'r')
-        self.file_des = json.load(f)
-        f.close
+        data = f.read()
+        f.close()
+        self.file_des = json.loads(data)
+        
         print("Début de Quizz")
-        print("  " + self.titre)
+        print("  Questionnaire: " + self.titre)
+        print("   Catégorie: "+ self.categorie)
+        print("    Difficulté:" + self.difficulte)
+        print("     Nombre de questions: "+ str(len(self.file_des["questions"])))
         for i in range(len(self.file_des["questions"])):
             print("  ", i+1, "-", self.file_des["questions"][i]["titre"])
 
@@ -89,39 +73,16 @@ class Questionnaire:
     def __init__(self, quizzs):
         self.quizzs = quizzs
 
-    def commencer(self):       
+    def commencer(self):      
         for quizz in self.quizzs:
             quizz.lancer()
                 
-        
-        #for question in file_des["questions"]:
-        #    if question.poser():
-        #        score += 1
-        #print("Score final :", score, "sur", len(self.questions))
-        #return y
-
-
-"""questionnaire = (
-    ("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"), 
-    ("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
-    ("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-                )
-
-lancer_questionnaire(questionnaire)"""
-
-# q1 = Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris")
-# q1.poser()
-
-# data = (("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris", "Quelle est la capitale de la France ?")
-# q = Question.FromData(data)
-# print(q.__dict__)
 
 Questionnaire(
-    (
+    [
     Quizz("animaux", "les chats", "confirme"),
-    
-    )
+    Quizz("animaux", "les chats", "confirme")    
+    ]
 ).commencer()
 
-# animaux_leschats_confirme
 
