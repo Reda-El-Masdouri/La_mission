@@ -4,6 +4,7 @@
 import json
 
 
+import sys
 import unicodedata
 
 
@@ -78,11 +79,27 @@ class Questionnaire:
             quizz.lancer()
                 
 
-Questionnaire(
-    [
-    Quizz("animaux", "les chats", "confirme"),
-    Quizz("animaux", "les chats", "confirme")    
-    ]
-).commencer()
 
 
+if len(sys.argv) < 2:
+    print("Erreur: spécifier le fichier json à charger")
+    exit(0)
+data_file = sys.argv[1]
+data_cpst = data_file.split(".")
+
+if not len(data_cpst) == 2:
+    print("Entrez un fichier JSON")
+else:
+    if not data_cpst[-1] == "json":
+        print("Vous avez entré un fichier qui n'a pas un format JSON")
+    else:
+        name_file = data_cpst[0]
+        cat_title_diff = name_file.split("_")
+
+        Questionnaire(
+            [
+            Quizz(cat_title_diff[0], cat_title_diff[1], cat_title_diff[2])   
+            ]
+        ).commencer()
+
+    
