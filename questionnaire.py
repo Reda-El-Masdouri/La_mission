@@ -40,7 +40,7 @@ class Quizz:
         print("    Difficulté:" + self.difficulte)
         print("     Nombre de questions: "+ str(len(self.file_des["questions"])))
         for i in range(len(self.file_des["questions"])):
-            print("  ", i+1, "-", self.file_des["questions"][i]["titre"])
+            print(" Question ", i+1, "/", len(self.file_des["questions"]), ":", self.file_des["questions"][i]["titre"])
 
             print()
             self.afficher_choix(self.file_des["questions"][i]["choix"])
