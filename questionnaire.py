@@ -28,7 +28,7 @@ import unicodedata
 from numpy import diff
 
 X =0
-class Question:
+class Quizz:
     def __init__(self, categorie, titre, difficulte):
         self.titre = titre
         self.categorie = categorie
@@ -37,7 +37,7 @@ class Question:
 
     def FromData(data):
         # ....
-        q = Question(data[2], data[0], data[1])
+        q = Quizz(data[2], data[0], data[1])
         return q
 
     def strip_accents(self, s):
@@ -48,11 +48,12 @@ class Question:
     def afficher_choix(self, choix):
         for i in range(0, len(choix)):
             print(str(i+1), '-', choix[i][0])
-    def poser(self):
+    def lancer(self):
+        score = 0
         f = open(self.get_quizz_filename(self.categorie, self.titre, self.difficulte), 'r')
         self.file_des = json.load(f)
         f.close
-        print("QUESTION")
+        print("Début de Quizz")
         print("  " + self.titre)
         for i in range(len(self.file_des["questions"])):
             print("  ", i+1, "-", self.file_des["questions"][i]["titre"])
@@ -60,14 +61,16 @@ class Question:
             print()
             self.afficher_choix(self.file_des["questions"][i]["choix"])
             resultat_response_correcte = False
-            reponse_int = Question.demander_reponse_numerique_utlisateur(1, len(self.file_des["questions"][i]["choix"]))
+            reponse_int = Quizz.demander_reponse_numerique_utlisateur(1, len(self.file_des["questions"][i]["choix"]))
             if self.file_des["questions"][i]["choix"][reponse_int-1][1] == True:
                 print("Bonne réponse")
                 resultat_response_correcte = True
+                score += 1
             else:
                 print("Mauvaise réponse")
             
         print()
+        print("Score final :", score, "sur", len(self.file_des["questions"]))
         return resultat_response_correcte
 
     def demander_reponse_numerique_utlisateur(min, max):
@@ -80,24 +83,22 @@ class Question:
             print("ERREUR : Vous devez rentrer un nombre entre", min, "et", max)
         except:
             print("ERREUR : Veuillez rentrer uniquement des chiffres")
-        return Question.demander_reponse_numerique_utlisateur(min, max)
+        return Quizz.demander_reponse_numerique_utlisateur(min, max)
     
 class Questionnaire:
-    def __init__(self, questions):
-        self.questions = questions
+    def __init__(self, quizzs):
+        self.quizzs = quizzs
 
-    def lancer(self):
-        score = 0
+    def commencer(self):       
+        for quizz in self.quizzs:
+            quizz.lancer()
+                
         
-        for question in self.questions:
-            if question.poser():
-                score += 1
-        print("Score final :", score, "sur", len(self.file_des["questions"]))
         #for question in file_des["questions"]:
         #    if question.poser():
         #        score += 1
         #print("Score final :", score, "sur", len(self.questions))
-        return score
+        #return y
 
 
 """questionnaire = (
@@ -117,10 +118,10 @@ lancer_questionnaire(questionnaire)"""
 
 Questionnaire(
     (
-    Question("animaux", "les chats", "confirme"),
-    Question("animaux", "les chats", "confirme")
+    Quizz("animaux", "les chats", "confirme"),
+    
     )
-).lancer()
+).commencer()
 
 # animaux_leschats_confirme
 
